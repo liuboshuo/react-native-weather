@@ -1,0 +1,21 @@
+{
+    "reason": "success",
+    "result": {
+        "pubTime": "20170705133805",
+        "reqTime": "20170705135239",
+        "data": {
+            "cw": "02",
+            "w": "阴",
+            "rh": 49,
+            "cwd": "06",
+            "wd": "西风",
+            "wdg": 1,
+            "tmp": 35,
+            "airp": 1008,
+            "st": 35,
+            "aqi": 50,
+            "tip_aqi": "空气清新"
+        }
+    },
+    "error_code": 0
+}
