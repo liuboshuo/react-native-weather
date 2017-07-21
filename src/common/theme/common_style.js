@@ -19,13 +19,13 @@ const common_style = {
     },
     // 标题
     titleTextStyle:{
-        fontSize:15,
+        fontSize:16,
         color:"rgba(200,200,200,0.6)"
     },
 
     //二级标题
     subTitleTextStyle:{
-        fontSize:14,
+        fontSize:15,
         color:"rgba(255,255,255,1)"
     },
 
@@ -41,6 +41,10 @@ const common_style = {
         marginRight:15
     },
 
+    padding15:{
+        paddingLeft:15,
+        paddingRight:15
+    },
     //左右margin->10
     margin10:{
         marginLeft:10,

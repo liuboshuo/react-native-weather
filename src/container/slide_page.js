@@ -24,6 +24,14 @@ export default class Slide_Page extends Component{
     }
 
     render(){
+        const {select_citys} = this.props;
+        const citys = select_citys.map(city=>{
+            return (
+                <View style={styles.cellView} key={city.areaid}>
+                    <Text>{city.area}</Text>
+                </View>
+            )
+        })
         return(
             <View style={[common_style.container_view,styles.container,]}>
 
@@ -49,14 +57,13 @@ export default class Slide_Page extends Component{
                                 <Text style={common_style.titleTextStyle}>我关注的城市</Text>
                             </View>
                             <View style={styles.rightViewStyle}>
-                                <Button text={"编辑"} textStyle={[styles.editTextStyle]} style={[styles.editButtonStyle,common_style.padding10,common_style.paddingTB]}/>
+                                <Button text={"编辑"} textStyle={[styles.editTextStyle]}
+                                        style={[styles.editButtonStyle,common_style.padding10,common_style.paddingTB]}/>
                             </View>
                         </View>
 
                         {/* cell view*/}
-                        <View style={styles.cellView}>
-                            <Text>城市选择</Text>
-                        </View>
+                        {citys}
 
                         <View style={styles.sectionBottom}>
                             <Button text={"添加城市"}
@@ -73,11 +80,13 @@ export default class Slide_Page extends Component{
         )
     }
 }
-const height = 40;
+const height = 45;
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:"rgba(0,0,5,0.89)"
+        backgroundColor:"rgb(39,44,51)"
     },
+
+
     nav:{
         height:contanst.navigation_height,
         justifyContent:"center",
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:"center",
         justifyContent:"space-between",
-        height:30,
+        height:40,
     },
     leftViewStyle:{
         flexDirection:'row',
@@ -106,13 +115,13 @@ const styles = StyleSheet.create({
     sectionIconStyle:{
         width:20,
         height:20,
-        marginRight:6
+        marginRight:5
     },
     editButtonStyle:{
         borderRadius:5,
-        borderWidth:0.6,
-        borderColor:"rgba(200,200,200,1)",
-        backgroundColor:"rgba(50,50,50,0.3)",
+        borderWidth:1,
+        borderColor:"rgba(68,73,80,1)",
+        backgroundColor:"rgb(45,50,55)",
     },
     editTextStyle:{
         color:contanst.subtTitleColor,
@@ -121,7 +130,7 @@ const styles = StyleSheet.create({
     cellView:{
         height:height,
         marginBottom:contanst.marginBW,
-        backgroundColor:"rgba(95,95,120,.1)"
+        backgroundColor:"rgb(45,50,55)"
     },
     addiconStyle:{
         width:20,
@@ -133,10 +142,11 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:'center',
         height:height,
+        backgroundColor:"rgb(45,50,55)"
     },
     addButtonStyle:{
         width:120,
-        height:30,
+        height:35,
         flexDirection:'row',
         justifyContent:"center",
         alignItems:'center',

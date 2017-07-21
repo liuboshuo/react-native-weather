@@ -18,6 +18,11 @@ export const screen_height = Dimensions.get("window").height;
 //导航的高
 export const navigation_height = Platform.OS == 'android' ? 51 : 64;
 
+export const statusBar = Platform.OS == 'android' ? 0 : 20;
+
+export const navigationNoStatusHeight_height = Platform.OS == 'android' ? 51 : 44;
+
+
 //减去导航的实际的页面的高度
 export const bg_view_height = screen_height - navigation_height;
 

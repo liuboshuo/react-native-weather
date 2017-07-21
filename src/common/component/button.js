@@ -26,7 +26,7 @@ export default class Button extends Component {
     };
 
     render() {
-        const { style, textStyle, iconStyle, text, icon, iconPosition: iconPosition='left' } = this.props;
+        const { style, textStyle, iconStyle, text, icon, iconPosition: iconPosition='left',key } = this.props;
 
         let eventHandlers = {};
         for (ehProp of EVENT_HANDLER_PROP_NAMES) {
@@ -47,7 +47,7 @@ export default class Button extends Component {
         const containerProps = Object.assign({}, this.props, eventHandlers, { style: btnStyle });
 
         return (
-            <TouchableOpacity {...containerProps} >
+            <TouchableOpacity {...containerProps} key={key} >
                 {( 'top' == iconPosition || 'left' == iconPosition) && icon &&
                 <Image style={[styles.iconStyle, iconStyle]}
                        source={icon} /> }
@@ -64,7 +64,7 @@ export default class Button extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#CCC',
+
     },
 
     iconStyle: {
