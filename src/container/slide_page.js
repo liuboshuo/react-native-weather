@@ -12,7 +12,7 @@ import * as contanst from './../common/theme/constant'
 import common_style from './../common/theme/common_style'
 import NeWorkImage from "./../common/component/netWorkImage";
 import Button from './../common/component/button'
-
+import Slide_City_View from './../component/slide_city_view'
 export default class Slide_Page extends Component{
 
     //添加
@@ -23,13 +23,23 @@ export default class Slide_Page extends Component{
         }
     }
 
+    deleteCity(delete_city){
+
+        const {deleteCity} = this.props;
+
+        //删除
+        if (deleteCity){
+            deleteCity(delete_city)
+        }
+
+
+    }
     render(){
         const {select_citys} = this.props;
         const citys = select_citys.map(city=>{
             return (
-                <View style={styles.cellView} key={city.areaid}>
-                    <Text>{city.area}</Text>
-                </View>
+                <Slide_City_View select_city={city} deleteCity={this.deleteCity.bind(this)} key={city.areaid}>
+                </Slide_City_View>
             )
         })
         return(
@@ -126,11 +136,6 @@ const styles = StyleSheet.create({
     editTextStyle:{
         color:contanst.subtTitleColor,
         fontSize:contanst.subtTitleSize
-    },
-    cellView:{
-        height:height,
-        marginBottom:contanst.marginBW,
-        backgroundColor:"rgb(45,50,55)"
     },
     addiconStyle:{
         width:20,
