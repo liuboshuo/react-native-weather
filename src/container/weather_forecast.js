@@ -63,7 +63,9 @@ export default class WeatherForecast extends Component {
                     <View tabLabel="tba-3" style={styles.tabView}>
                         <Text>Messenger</Text>
                     </View>
-
+                    <View tabLabel="tab-4" style={styles.tabView}>
+                        <Text>News</Text>
+                    </View>
                 </ScrollableTabView>
 
 
