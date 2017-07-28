@@ -22,13 +22,23 @@ const common_style = {
         fontSize:16,
         color:"rgba(200,200,200,0.6)"
     },
-
+    title255Style:{
+        fontSize:16,
+        color:"#fff"
+    },
     //二级标题
     subTitleTextStyle:{
         fontSize:15,
         color:"rgba(255,255,255,1)"
     },
-
+    subTitle255Style:{
+        fontSize:15,
+        color:"#fff"
+    },
+    thirdTitle255Style:{
+        fontSize:13,
+        color:"#fff"
+    },
     //小标题的样式
     thirdTitleTextStyle:{
         fontSize:13,

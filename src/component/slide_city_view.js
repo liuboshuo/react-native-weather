@@ -24,11 +24,11 @@ export default class Silde_City_View extends Component {
         const {select_city,key} = this.props;
         const {city,nowWeather} = select_city;
         return(
-            <Swipeout autoClose={true} style={styles.swipeoutView} right={[{text:'删除',
+            <Swipeout autoClose={true} key={key} style={styles.swipeoutView} right={[{text:'删除',
                 backgroundColor:'red',
                 type:'primary',
-                onPress:()=>{this.deleteSelect(select_city)}}]} >
-                <View style={styles.cellView} key={key}>
+                onPress:()=>{this.deleteSelect(select_city)}}]}  >
+                <View style={styles.cellView} >
                     <Text style={styles.areaStyle}>{city.area}</Text>
 
                     <View style={styles.rightView}>

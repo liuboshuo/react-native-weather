@@ -64,7 +64,7 @@ export default class Main_Page extends Component {
             const everyHourWeather = detailweather.result;
             const fiftheenWeather = detailweather1.result;
 
-            this.state.select_citys.push({
+            this.state.select_citys.unshift({
                 city:selectCity,
                 nowWeather:nowWeather,  //现在天气
                 everyHourWeather:everyHourWeather, //每小时天气
@@ -72,7 +72,6 @@ export default class Main_Page extends Component {
             })
             this.setState({updateState:!this.state.updateState})
         }
-
     }
     deleteCity(delete_city){
         let delete_city_index = -1;
@@ -86,6 +85,22 @@ export default class Main_Page extends Component {
             this.state.select_citys.splice(delete_city_index,1);
             this.setState({updateState:!this.state.updateState})
         }
+    }
+
+    componentDidMount(){
+        for (let i = 0;i<2;i++){
+            const city = citys.result[Math.floor(Math.random() * 100)]
+            const nowWeather = nowweather.result;
+            const everyHourWeather = detailweather.result;
+            const fiftheenWeather = detailweather1.result;
+            this.state.select_citys.unshift({
+                city:city,
+                nowWeather:nowWeather,  //现在天气
+                everyHourWeather:everyHourWeather, //每小时天气
+                fiftheenWeather:fiftheenWeather,   //15天天气
+            })
+        }
+        this.setState({updateState:!this.state.updateState})
     }
 
     render() {

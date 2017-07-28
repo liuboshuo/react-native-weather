@@ -36,9 +36,9 @@ export default class Slide_Page extends Component{
     }
     render(){
         const {select_citys} = this.props;
-        const citys = select_citys.map(city=>{
+        const citys = select_citys.map((city,index)=>{
             return (
-                <Slide_City_View select_city={city} deleteCity={this.deleteCity.bind(this)} key={city.areaid}>
+                <Slide_City_View select_city={city} deleteCity={this.deleteCity.bind(this)} key={""+ (-1* index - 1)}>
                 </Slide_City_View>
             )
         })

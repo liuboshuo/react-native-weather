@@ -22,18 +22,11 @@ export default class CustomTabBar extends Component
 {
     constructor(props){
         super(props);
-
-
-
         this.animatedLeft = 0
         this.lastPoint = null;
         this.state = {
             viewX : new Animated.Value(0),
         }
-        const {tabs} = this.props;
-        tabs.map((text,index)=>{
-            this.state["textSize"+index] = new Animated.Value(0)
-        })
         this.responder = {
             onStartShouldSetResponder:(evt,gestureState)=>{return true},
             onMoveShouldSetResponder:(evt,gestureState)=>{return true},
@@ -44,137 +37,154 @@ export default class CustomTabBar extends Component
                 return true
             },
             onResponderGrant:(evt, gestureState)=> {
-                console.log(evt.nativeEvent)
+
             },
             onResponderMove:(evt, gestureState)=>{
-                // console.log(evt.nativeEvent)
+                const {tabs} = this.props;
                 if (this.lastPoint){
                     const pageX = this.animatedLeft + (evt.nativeEvent.pageX - this.lastPoint.pageX);
-                    console.log(pageX)
-                    Animated.timing(this.state.viewX,{
-                        toValue:pageX,
-                        duration:evt.nativeEvent.timestamp - this.lastPoint.timestamp
-                    }).start()
-                    this.animatedLeft = pageX;
-
-
-
-                    const centerX =  tabBarW / 2  - btnW / 2;
-
-                    let moveX = 0 ,index = 0;
-                    for (let i=0;i<tabs.length;i++){
-                        let distance = (i*btnW + pageX - centerX)
-                        if (distance < 0 ){
-                            distance = -1 * distance;
-                        }
-                        if (i == 0){
-                            moveX = distance;
-                        }else {
-                            if (moveX > distance ){
-                                moveX = distance
-                                index = i;
-                            }
-                        }
-                        const animateds = [];
-                        tabs.map((item,i)=>{
-                            animateds.push(this.state["textSize"+i])
-                        })
-                        Animated.parallel(animateds.map(item=>{
-                            return Animated.timing(item,{
-                                toValue:centerX / (centerX - moveX),
-                                duration:100
-                            })
-                        })).start();
+                    const centerX =  tabBarW / 2;
+                    const index = Math.floor((centerX - pageX) / btnW)
+                    if (index != this.state.selectIndex && index>=0 && index <= tabs.length-1){
+                        this.setState({selectIndex:index})
                     }
-
-
+                    this.startMove(evt,pageX)
                 }
                 this.lastPoint = evt.nativeEvent;
             },
             onResponderRelease:(evt, gestureState)=>{
-                const {tabs} = this.props
+                const {tabs} = this.props;
                 if (this.lastPoint){
                     let pageX = this.animatedLeft + (evt.nativeEvent.pageX - this.lastPoint.pageX);
+
                     const centerX =  tabBarW / 2;
 
-                    let moveX = 0 ,index = 0;
-                    for (let i=0;i<tabs.length;i++){
-                        let distance = (i*btnW + pageX - centerX + btnW / 2)
-                        if (distance < 0 ){
-                            distance = -1 * distance;
-                        }
-                        if (i == 0){
-                            moveX = distance;
-                        }else {
-                            if (moveX > distance ){
-                                moveX = distance
-                                index = i;
-                            }
+                    const distanceArr = this.getMinDis(pageX)
+                    let moveX = distanceArr[0] ,index = 0;
+                    for (let i=1;i<distanceArr.length;i++){
+                        let distance = distanceArr[i]
+                        if (moveX > distance ){
+                            moveX = distance
+                            index = i;
                         }
                     }
                     pageX = centerX  - btnW / 2 - index * btnW
-
-
-
-
-
-                    console.log(pageX)
-                    Animated.timing(this.state.viewX,{
-                        toValue:pageX,
-                        duration:evt.nativeEvent.timestamp - this.lastPoint.timestamp
-                    }).start()
-                    this.animatedLeft = pageX;
+                    this.startMove(evt,pageX,()=>{
+                        this.changeSelect(index)
+                    })
                 }
                 //修复
                 this.lastPoint = null;
             },
         }
-
     }
+    getMinDis(pageX){
+        const {tabs} = this.props
+        const distanceArr = [];
+        const centerX =  tabBarW / 2;
+        tabs.map((item,index)=>{
+            let distance = (index*btnW + pageX - centerX + btnW / 2)
+            if (distance < 0 ){
+                distance = -1 * distance;
+            }
+            distanceArr.push(distance)
+        })
+        return distanceArr;
+    }
+    startMove(evt,pageX, success=null){
+        const moveTime = evt.nativeEvent.timestamp - this.lastPoint.timestamp;
+        Animated.timing(this.state.viewX,{
+            toValue:pageX,
+            duration:moveTime > 100 ? 100 : moveTime
+        }).start(success)
+        this.animatedLeft = pageX;
+    }
+    componentDidMount(){
+        const {selectIndex} = this.props;
+        this.state["selectIndex"] = selectIndex;
+        this.initialMove()
+    }
+    componentWillReceiveProps(props) {
+        const {selectIndex} = props;
+        if (this.state.selectIndex != selectIndex){
+            this.state.selectIndex = selectIndex;
+            this.initialMove()
+        }
+    }
+    initialMove(finished=null){
+        const {selectIndex} = this.state;
+        Animated.timing(this.state.viewX,{
+            toValue:(tabBarW / 2 - btnW / 2) - selectIndex*btnW,
+            duration: 100
+        }).start(finished)
+        this.animatedLeft = tabBarW / 2 - btnW / 2;
+    }
+    changeSelect(index){
+
+        this.setState({selectIndex:index})
+
+        this.props.onChangePage(index)
+    }
+
     render(){
-        const {select_citys,tabs} = this.props;
+        const {tabs} = this.props;
+        const {selectIndex} = this.state;
         let selectTextStyle = {}
         const swiper = tabs.map((tab, i)=>{
+            if (selectIndex == i){
+                selectTextStyle = {fontSize:18, fontWeight:'bold',color:"rgba(255,255,255,1)"}
+            }else {
+                selectTextStyle = {fontSize:13,color:"rgba(255,255,255,0.5)"}
+            }
             return (
-                <TouchableOpacity key={i} style={styles.item} activeOpacity={1} >
-                    <Animated.Text style={[styles.textStyle,selectTextStyle,{
-                        fontSize:this.state["textSize"+i].interpolate({
-                            inputRange:[0,1],
-                            outputRange:[12,17],
-                        })
-                    }]}>{tab}</Animated.Text>
+                <TouchableOpacity key={i} style={styles.item} activeOpacity={1} onPress={()=>{
+                    if (this.state.selectIndex !== i){
+                        this.changeSelect(i)
+                        this.state.selectIndex = i;
+                        this.initialMove()
+                    }
+
+
+                }}>
+                    <Text style={[styles.textStyle,selectTextStyle]}>{tab}</Text>
                 </TouchableOpacity>
             )
         })
-        return (
-            <View style={styles.customTab}>
-                <Image source={{uri:"icon_navigation_bar_image"}} style={{resizeMode:'cover',zIndex:1,width:60,height:constant.navigationNoStatusHeight_height}}>
 
-                </Image>
-                <View style={styles.tabBar}>
+        let styleDot;
+        let dots = tabs.map((tab, i)=>{
+            styleDot = i == selectIndex ?{color:'#ffffff'}:{color:'rgba(255,255,255,0.1)'}
+            return (
+                <Text key={i+2*tabs.length} style={[styleDot,{fontSize:25}]}>
+                    &bull;
+                </Text>
+            )
+        })
+        const style = this.props.style ? this.props.style : {}
+
+        return (
+                <View style={[styles.tabBar,style]}>
                     <Animated.View style={[styles.swiper,{left:this.state.viewX}]}
                           {...this.responder}
                     >
                         {swiper}
                     </Animated.View>
+                    <View style={styles.dot}>
+                        {dots}
+                    </View>
                 </View>
-                <Image source={{uri:"icon_navigation_bar_image"}} style={{zIndex:2,width:60,height:constant.navigationNoStatusHeight_height}}>
-                </Image>
-            </View>
         )
     }
 }
 
 
 const styles = StyleSheet.create({
-    customTab:{
-        backgroundColor:"red",
-        flexDirection:'row'
-    },
     tabBar:{
+        marginLeft:60,
+        marginRight:60,
         width:constant.screen_width - 120,
         height:constant.navigationNoStatusHeight_height,
-        backgroundColor:'orange',
+        overflow:"scroll" //超出控件的view会隐藏
     },
     swiper:{
         position:'absolute',
@@ -183,7 +193,6 @@ const styles = StyleSheet.create({
         top:0,
         flexDirection:"row",
         alignItems:'center',
-        backgroundColor:'purple',
         zIndex:-1
     },
     item:{
@@ -197,6 +206,15 @@ const styles = StyleSheet.create({
         color:"#fff",
         fontSize:17,
         backgroundColor: 'rgba(0,0,0,0)'
+    },
+    dot:{
+        flexDirection:"row",
+        alignItems:'center',
+        justifyContent:'center',
+        position:'absolute',
+        width:tabBarW,
+        height:10,
+        bottom:0,
     }
 
 })

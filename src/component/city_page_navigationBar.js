@@ -38,6 +38,7 @@ export default class City_Page_NavigationBar extends Component{
         Animated.parallel(views.map(data=>{
             return Animated.timing(data,{
                 toValue:0,
+                duration:100
             })
         })).start(()=>{
             //动画结束
@@ -56,6 +57,7 @@ export default class City_Page_NavigationBar extends Component{
         Animated.parallel(views.map(data=>{
             return Animated.timing(data,{
                 toValue:1,
+                duration:100
             })
         })).start(()=>{
             this.setState({
@@ -148,6 +150,7 @@ const styles = StyleSheet.create({
     },
     cancelTextStyle:{
         color:"#fff",
-        fontSize:contanst.titleSize
+        fontSize:contanst.titleSize,
+        backgroundColor:'rgba(0,0,0,0)'
     }
 });

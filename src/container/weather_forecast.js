@@ -6,7 +6,8 @@ import {
     StyleSheet,
     View,
     Platform,
-    Text
+    Text,
+    ScrollView
 } from 'react-native';
 import BackgroundView from './../component/bg_view'
 import common_style from './../common/theme/common_style'
@@ -15,13 +16,17 @@ import Button from './../common/component/button'
 import * as constant from './../common/theme/constant'
 import ScrollableTabView ,{ScrollableTabBar} from 'react-native-scrollable-tab-view'
 import CustomTabBar from './../component/customTabBar'
+import City_Weather_Page from "./city_weather_page";
+
 export default class WeatherForecast extends Component {
 
     // 构造
     constructor(props) {
         super(props);
         // 初始状态
-        this.state = {};
+        this.state = {
+            page:0
+        };
     }
 
     componentWillMount() {
@@ -34,54 +39,65 @@ export default class WeatherForecast extends Component {
     leftAction(){
         this.props.onOpen()
     }
+    onChangePage(page){
+        this.scrollView.scrollResponderScrollTo({x:page*constant.screen_width,y:0,animated:true})
+    }
+    onAnimationEnd(e){
+        const page = Math.floor(e.nativeEvent.contentOffset.x / constant.screen_width)
+        if (page != this.state.page){
+            this.setState({page:page})
+        }
 
+    }
     render() {
         const {select_citys} = this.props;
+        const tabs= [];
+        const views = select_citys.map((item,index)=>{
+            tabs.push(item.city.area);
+            return (
+                <City_Weather_Page key={ (index+1)*100}
+                                   city={item.city}
+                                   nowWeather={item.nowWeather}
+                                   everyHourWeather={item.everyHourWeather}
+                                   fiftheenWeather={item.fiftheenWeather}
+                />
+            )
+        })
         return (
             <BackgroundView>
                 {/*自定义导航*/}
-
-
-                <View style={styles.statusBar}>
-                </View>
                 <Button icon={{uri:"icon_left_menu"}}
                         iconStyle={styles.icon_left_menu}
                         onPress={this.leftAction.bind(this)}
                         style={styles.left_btn}
                         activeOpacity={1}/>
-                <ScrollableTabView
-                    style={[common_style.container_view,styles.container]}
-                    initialPage={0}
-                    renderTabBar={() => <CustomTabBar select_citys={select_citys}/>}
+
+                {/* 导航 */}
+                <CustomTabBar style={styles.topNavigationBarStyle} tabs={tabs} selectIndex={this.state.page} onChangePage={(page)=>this.onChangePage(page)}/>
+
+                <ScrollView ref={ref=>this.scrollView = ref}style={styles.container}
+                            horizontal={true}
+                            pagingEnabled={true}
+                            onMomentumScrollEnd={(event)=>this.onAnimationEnd(event)}
+                            bounces={false}
+                            showsHorizontalScrollIndicator={false}
                 >
-                    <View tabLabel="tab-1" style={styles.tabView}>
-                        <Text>News</Text>
-                    </View>
-                    <View tabLabel="tab-2" style={styles.tabView}>
-                        <Text>Friends</Text>
-                    </View>
-                    <View tabLabel="tba-3" style={styles.tabView}>
-                        <Text>Messenger</Text>
-                    </View>
-                    <View tabLabel="tab-4" style={styles.tabView}>
-                        <Text>News</Text>
-                    </View>
-                </ScrollableTabView>
 
+                    {views}
 
-                <View ref="container" >
+                </ScrollView>
 
-
-                </View>
             </BackgroundView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: common_style.container_view,
+    container: {
+        flex:1,
+    },
     content_style:{
-        flex:1
+        flex:1,
     },
     statusBar:{
         height:Platform.OS == 'ios' ? 20 : 0
@@ -104,7 +120,10 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor:'blue'
     },
-    tabView:{
-        flex:1,
+    topNavigationBarStyle:{
+        position:'absolute',
+        marginTop:Platform.OS == 'ios' ? 20 : 0,
+        // backgroundColor:"red",
+        zIndex:1001,  //点击事件
     }
 });
