@@ -155,7 +155,7 @@ export default class CustomTabBar extends Component
         let dots = tabs.map((tab, i)=>{
             styleDot = i == selectIndex ?{color:'#ffffff'}:{color:'rgba(255,255,255,0.1)'}
             return (
-                <Text key={i+2*tabs.length} style={[styleDot,{fontSize:25}]}>
+                <Text key={i+2*tabs.length} style={[styleDot,{fontSize:13}]}>
                     &bull;
                 </Text>
             )

@@ -22,7 +22,6 @@ export default class Slide_Page extends Component{
             this.props.addCityClick();
         }
     }
-
     deleteCity(delete_city){
 
         const {deleteCity} = this.props;
@@ -31,14 +30,20 @@ export default class Slide_Page extends Component{
         if (deleteCity){
             deleteCity(delete_city)
         }
-
-
     }
     render(){
         const {select_citys} = this.props;
         const citys = select_citys.map((city,index)=>{
             return (
-                <Slide_City_View select_city={city} deleteCity={this.deleteCity.bind(this)} key={""+ (-1* index - 1)}>
+                <Slide_City_View
+                    select_city={city}
+                    deleteCity={this.deleteCity.bind(this)}
+                    key={""+ (-1* index - 1)}
+                    defaultProp={index == 0 ? true : false}
+                    index={index}
+                    setDefaultCity={this.props.setDefaultCity}
+                    length={select_citys.length}
+                >
                 </Slide_City_View>
             )
         })
@@ -66,10 +71,10 @@ export default class Slide_Page extends Component{
                                 />
                                 <Text style={common_style.titleTextStyle}>我关注的城市</Text>
                             </View>
-                            <View style={styles.rightViewStyle}>
-                                <Button text={"编辑"} textStyle={[styles.editTextStyle]}
-                                        style={[styles.editButtonStyle,common_style.padding10,common_style.paddingTB]}/>
-                            </View>
+                            {/*<View style={styles.rightViewStyle}>*/}
+                                {/*<Button text={"编辑"} textStyle={[styles.editTextStyle]}*/}
+                                        {/*style={[styles.editButtonStyle,common_style.padding10,common_style.paddingTB]}/>*/}
+                            {/*</View>*/}
                         </View>
 
                         {/* cell view*/}

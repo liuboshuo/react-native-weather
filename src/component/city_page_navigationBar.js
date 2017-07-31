@@ -22,10 +22,10 @@ export default class City_Page_NavigationBar extends Component{
         // 初始状态
         this.state = {
             startInput:false,
+            text:"",
+            bgImageY:new Animated.Value(1),
             bgImageHeight:new Animated.Value(1),
-            searchViewAnimatedTop:new Animated.Value(1),
-            searchViewAnimatedLeft:new Animated.Value(1),
-            searchViewAnimatedWidth:new Animated.Value(1),
+            searchViewAnimatedMarginTop:new Animated.Value(1),
         };
     }
     leftAction(){
@@ -34,7 +34,9 @@ export default class City_Page_NavigationBar extends Component{
         }
     }
     onFocus(){
-        const views = [this.state.bgImageHeight,this.state.searchViewAnimatedLeft,this.state.searchViewAnimatedTop,this.state.searchViewAnimatedWidth];
+        const {startSearch} = this.props;
+        startSearch();
+        const views = [this.state.bgImageY,this.state.searchViewAnimatedMarginTop,this.state.bgImageHeight];
         Animated.parallel(views.map(data=>{
             return Animated.timing(data,{
                 toValue:0,
@@ -47,13 +49,15 @@ export default class City_Page_NavigationBar extends Component{
             })
         })
     }
-    onChangeText(){
-
+    onChangeText(text){
+        this.props.onChangeText(text)
     }
     cancelSearchAction(){
+        const {cancelSearch} = this.props;
+        cancelSearch();
         this.input.blur();
         this.input.value = "";
-        const views = [this.state.bgImageHeight,this.state.searchViewAnimatedLeft,this.state.searchViewAnimatedTop,this.state.searchViewAnimatedWidth];
+        const views = [this.state.bgImageY,this.state.searchViewAnimatedMarginTop,this.state.bgImageHeight];
         Animated.parallel(views.map(data=>{
             return Animated.timing(data,{
                 toValue:1,
@@ -69,9 +73,13 @@ export default class City_Page_NavigationBar extends Component{
     render(){
         return (
             <Animated.Image style={[styles.topNavigation,{
+                top:this.state.bgImageY.interpolate({
+                    inputRange:[0,1],
+                    outputRange:[-1 * contanst.navigation_height,0]
+                }),
                 height:this.state.bgImageHeight.interpolate({
                     inputRange:[0,1],
-                    outputRange:[contanst.navigation_height,contanst.navigation_height+contanst.navigationNoStatusHeight_height]
+                    outputRange:[contanst.navigation_height * 2,contanst.navigation_height + contanst.navigationNoStatusHeight_height]
                 })
             }]} source={{uri:'day'}}>
                 <NavigationBar
@@ -80,24 +88,17 @@ export default class City_Page_NavigationBar extends Component{
                     leftAction={this.leftAction.bind(this)}
                     style={styles.navigationBar}/>
 
-                <Animated.View style={[styles.topSearchStyle,common_style.padding15, {
-                    left: this.state.searchViewAnimatedLeft.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [30, 0],
-                    }),
-                    top: this.state.searchViewAnimatedTop.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [contanst.statusBar, contanst.navigation_height],
-                    }),
-                    width:this.state.searchViewAnimatedWidth.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [contanst.screen_width - 30, contanst.screen_width],
+                <Animated.View style={[styles.topSearchStyle,common_style.padding15,{
+                    marginTop:this.state.searchViewAnimatedMarginTop.interpolate({
+                        inputRange:[0,1],
+                        outputRange:[(contanst.navigationNoStatusHeight_height - 30) / 2 + contanst.statusBar,(contanst.navigationNoStatusHeight_height - 30) / 2]
                     })
                 }]}>
                     <View style={[styles.textView]}>
                         <TextInput
                             ref={ref=>this.input = ref}
                             placeholder={"搜索国内城市"}
+                            defaultValue={this.state.text}
                             style={styles.textInput}
                             onFocus={this.onFocus.bind(this)}
                             onChangeText={this.onChangeText.bind(this)}
@@ -127,7 +128,10 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         height:30,
-        marginTop:contanst.navigationNoStatusHeight_height / 2- 30 / 2,
+        marginTop:(contanst.navigationNoStatusHeight_height - 30) / 2,
+        left:0,
+        top:contanst.navigation_height,
+        width:contanst.screen_width,
     },
     textView:{
         flex:1,
@@ -137,7 +141,6 @@ const styles = StyleSheet.create({
     textInput:{
         flex:1,
         fontSize:contanst.subtTitleSize,
-        color:contanst.subtTitleColor,
         paddingLeft:6,
         paddingRight:3,
     },

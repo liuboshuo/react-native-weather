@@ -14,7 +14,6 @@ import common_style from './../common/theme/common_style'
 import NavigationBar from './../common/component/navigationBar'
 import Button from './../common/component/button'
 import * as constant from './../common/theme/constant'
-import ScrollableTabView ,{ScrollableTabBar} from 'react-native-scrollable-tab-view'
 import CustomTabBar from './../component/customTabBar'
 import City_Weather_Page from "./city_weather_page";
 
@@ -60,6 +59,7 @@ export default class WeatherForecast extends Component {
                                    nowWeather={item.nowWeather}
                                    everyHourWeather={item.everyHourWeather}
                                    fiftheenWeather={item.fiftheenWeather}
+                                   pushWeatherToday={this.props.pushWeatherToday}
                 />
             )
         })
@@ -75,7 +75,7 @@ export default class WeatherForecast extends Component {
                 {/* 导航 */}
                 <CustomTabBar style={styles.topNavigationBarStyle} tabs={tabs} selectIndex={this.state.page} onChangePage={(page)=>this.onChangePage(page)}/>
 
-                <ScrollView ref={ref=>this.scrollView = ref}style={styles.container}
+                <ScrollView ref={ref=>this.scrollView = ref} style={styles.container}
                             horizontal={true}
                             pagingEnabled={true}
                             onMomentumScrollEnd={(event)=>this.onAnimationEnd(event)}

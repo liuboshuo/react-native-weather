@@ -8,7 +8,9 @@ import {
     Image,
     ScrollView,
     Text,
+    TouchableOpacity,
     FlatList,
+    Animated,
 } from 'react-native';
 import common_style from './../common/theme/common_style'
 import NavigationBar from './../common/component/navigationBar'
@@ -24,7 +26,10 @@ export default class All_City_Page extends Component {
         super(props);
         // 初始状态
         this.state = {
-            citys : []
+            citys : [],
+            animatedValue:new Animated.Value(0),
+            isSearch:false,
+            searchCitys:[]
         };
     }
     componentDidMount() {
@@ -65,6 +70,14 @@ export default class All_City_Page extends Component {
                 }
             })
         }
+    }
+    searchCityDetail(select_city){
+
+        const {navigator,onSelectCity} = this.props;
+            //选择城市完成
+            onSelectCity(select_city)
+            //跳转到指定路由的页面
+        navigator.popToTop()
 
     }
     renderItem(data){
@@ -78,6 +91,43 @@ export default class All_City_Page extends Component {
                 <Text style={styles.headerText}>{selectCity ? selectCity.province : "国内城市"}</Text>
             </View>
         )
+    }
+    cancelSearch(){
+        Animated.timing(this.state.animatedValue,{
+            toValue:0,
+            duration:100
+        }).start(()=>{
+            this.setState({isSearch:false,searchCitys:[]})
+        });
+    }
+    startSearch(){
+        Animated.timing(this.state.animatedValue,{
+            toValue:1,
+            duration:100
+        }).start();
+        this.setState({isSearch:true})
+    }
+    onChangeText(text){
+        const {all_citys} = this.props;
+        const searchData = [];
+        all_citys.map(temp=>{
+            if (temp.area.indexOf(text) != -1){
+                searchData.push(temp);
+            }
+        })
+        this.setState({
+            searchCitys:searchData
+        })
+    }
+    renderSearchItem(city){
+        return (
+            <TouchableOpacity style={styles.searchCellContent} onPress={this.searchCityDetail.bind(this,city.item)}>
+                <Text style={[common_style.subTitleTextStyle,styles.subTitleTextStyle]}>{city.item.area}</Text>
+            </TouchableOpacity>
+        )
+    }
+    separator(){
+        return (<View style={styles.separator}></View>)
     }
     render() {
         const {selectCity} = this.props;
@@ -93,20 +143,49 @@ export default class All_City_Page extends Component {
                             style={styles.navigationBar}/>
                     </Image>
                    :
-                    <City_Page_NavigationBar pop={this.pop.bind(this)}/>
+                    <City_Page_NavigationBar pop={this.pop.bind(this)}
+                                             cancelSearch={this.cancelSearch.bind(this)}
+                                             startSearch={this.startSearch.bind(this) }
+                                             onChangeText={this.onChangeText.bind(this)}/>
                 }
+                <Animated.View style={[styles.content_style,{
+                    height:this.state.animatedValue.interpolate({
+                        inputRange:[0,1],
+                        outputRange:[contanst.screen_height - contanst.navigation_height - contanst.navigationNoStatusHeight_height,contanst.screen_height - contanst.navigation_height]
+                    }),
+                    top:this.state.animatedValue.interpolate({
+                        inputRange:[0,1],
+                        outputRange:[0, -1 * contanst.navigation_height]
+                    }),
+                }]}>
+                    {this.state.isSearch
+                        ?
+                        <View style={styles.content_view_style}>
 
-                <ScrollView ref="container" style={styles.content_style}>
+                            <FlatList
+                                      style={{flex:1}}
+                                      data={this.state.searchCitys}
+                                      renderItem={this.renderSearchItem.bind(this)}
+                                      ItemSeparatorComponent={this.separator.bind(this)}
+                            />
 
-                    <FlatList ref={"flat"}
-                              style={[styles.flatList,]}
-                              data={this.state.citys}
-                              ListHeaderComponent={this.header.bind(this)}
-                              renderItem={this.renderItem.bind(this)}
-                              numColumns={4}
-                              columnWrapperStyle={{}}
-                    />
-                </ScrollView>
+                        </View>
+                        :
+                        <ScrollView ref="container" style={styles.content_view_style}>
+
+                            <FlatList ref={"flat"}
+                                      style={[styles.flatList,]}
+                                      data={this.state.citys}
+                                      ListHeaderComponent={this.header.bind(this)}
+                                      renderItem={this.renderItem.bind(this)}
+                                      numColumns={4}
+                                      columnWrapperStyle={{}}
+                            />
+                        </ScrollView>
+                    }
+
+                </Animated.View>
+
             </View>
         );
     }
@@ -123,7 +202,10 @@ const styles = StyleSheet.create({
         height:contanst.navigation_height
     },
     content_style:{
-        flex:1,
+        width:contanst.screen_width,
+    },
+    content_view_style:{
+      flex:1,
         backgroundColor:"#eee"
     },
     flatList:{
@@ -152,5 +234,22 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginRight:6,
         marginBottom:10,
+    },
+    searchCellContent:{
+        backgroundColor:"#fff",
+        flexDirection:"row",
+        alignItems:"center",
+        height:30,
+    },
+    subTitleTextStyle:{
+        color:'rgb(130,130,130)',
+        fontSize:16,
+        paddingLeft:15,
+        paddingRight:10,
+    },
+    separator:{
+        height:1,
+        backgroundColor:'#eee',
     }
+
 });

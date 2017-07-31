@@ -20,14 +20,44 @@ export default class Silde_City_View extends Component {
         }
     }
 
+    setDefault(){
+        const {setDefaultCity,index} = this.props;
+        setDefaultCity(index);
+    }
     render() {
-        const {select_city,key} = this.props;
+        const {select_city,key,defaultProp,length} = this.props;
         const {city,nowWeather} = select_city;
-        return(
-            <Swipeout autoClose={true} key={key} style={styles.swipeoutView} right={[{text:'删除',
+        if (length > 1){
+            const deleteBtn = {
+                text:'删除',
                 backgroundColor:'red',
-                type:'primary',
-                onPress:()=>{this.deleteSelect(select_city)}}]}  >
+                type:'primary', onPress:()=>{this.deleteSelect(select_city)}
+            };
+            const btns = defaultProp ? [deleteBtn] :
+                [{
+                    text:'默认',
+                    backgroundColor:'rgb(40,50,59)',
+                    onPress:()=>{this.setDefault(select_city)}
+                },deleteBtn];
+
+            return(
+
+                <Swipeout key={key}
+                          autoClose={true}
+                          style={styles.swipeoutView}
+                          right={btns}  >
+                    <View style={styles.cellView} >
+                        <Text style={styles.areaStyle}>{city.area}</Text>
+
+                        <View style={styles.rightView}>
+                            <Image style={styles.temIcon} source={{"uri":nowWeather.data.icon}}/>
+                            <Text style={styles.tempStyle}>{nowWeather.data.tmp_max} {"°C~"} {nowWeather.data.tmp_min +"°C"} </Text>
+                        </View>
+                    </View>
+                </Swipeout>
+            )
+        }else {
+            return(
                 <View style={styles.cellView} >
                     <Text style={styles.areaStyle}>{city.area}</Text>
 
@@ -36,8 +66,8 @@ export default class Silde_City_View extends Component {
                         <Text style={styles.tempStyle}>{nowWeather.data.tmp_max} {"°C~"} {nowWeather.data.tmp_min +"°C"} </Text>
                     </View>
                 </View>
-            </Swipeout>
-        )
+            )
+        }
 
     }
 }

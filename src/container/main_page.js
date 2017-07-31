@@ -11,6 +11,7 @@ import citys from './../../api/all_citys.json'
 import nowweather from './../../api/nowweather.json'
 import detailweather from './../../api/weatherDetail.json'
 import detailweather1 from './../../api/weatherDetailTwo.json'
+import City_Weather_Hour_page from './city_weather_hour_page'
 
 export default class Main_Page extends Component {
     constructor(props) {
@@ -73,6 +74,11 @@ export default class Main_Page extends Component {
             this.setState({updateState:!this.state.updateState})
         }
     }
+    setDefaultCity(index){
+        const deleteData =this.state.select_citys.splice(index,1);
+        this.state.select_citys.unshift(deleteData[0]);
+        this.setState({updateState:!this.state.updateState})
+    }
     deleteCity(delete_city){
         let delete_city_index = -1;
         this.state.select_citys.map((citys,index)=>{
@@ -88,7 +94,7 @@ export default class Main_Page extends Component {
     }
 
     componentDidMount(){
-        for (let i = 0;i<2;i++){
+        for (let i = 0;i<1;i++){
             const city = citys.result[Math.floor(Math.random() * 100)]
             const nowWeather = nowweather.result;
             const everyHourWeather = detailweather.result;
@@ -102,16 +108,29 @@ export default class Main_Page extends Component {
         }
         this.setState({updateState:!this.state.updateState})
     }
-
+    pushWeatherToday(everyHourWeather,nowWeather,fiftheenWeather,city){
+        const {navigator} = this.props;
+        navigator.push({
+            component:City_Weather_Hour_page,
+            params:{
+                everyHourWeather:everyHourWeather,
+                nowWeather:nowWeather,
+                fiftheenWeather:fiftheenWeather,
+                city:city
+            }
+        })
+        // console.log(everyHourWeather,nowWeather)
+    }
     render() {
         return (
-            <SlideMenu style={[common_style.container_view,{backgroundColor:""}]}
+            <SlideMenu style={[common_style.container_view]}
                        isOpen={this.state.isOpen}
                        menu={<Slide_Page
                            deleteCity={this.deleteCity.bind(this)}
                            select_citys={this.state.select_citys}
                            cellClick={this.cellClick.bind(this)}
                            addCityClick={this.addCityClick.bind(this)}
+                           setDefaultCity={this.setDefaultCity.bind(this)}
                        />}
                        onChange={(isOpen)=>this.onItemChange(isOpen)}
             >
@@ -119,7 +138,8 @@ export default class Main_Page extends Component {
                 {/*主页*/}
                 <WeatherForecast onOpen={this.onOpen.bind(this)}
                                  select_citys={this.state.select_citys}
-                                 onDataLoad={()=>{console.log("onDataLoad")}}/>
+                                 // onDataLoad={()=>{console.log("onDataLoad")}}
+                                 pushWeatherToday={this.pushWeatherToday.bind(this)}/>
 
             </SlideMenu>
         )

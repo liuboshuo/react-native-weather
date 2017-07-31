@@ -73,12 +73,12 @@ const common_style = {
     //分割线
     separatorBlack:{
         borderBottomWidth:0.6,
-        borderBottomColor:"rgba(10,10,10,0.6)"
+        borderBottomColor:"#eee"
     },
     //分割线
     separatorWhite:{
         borderBottomWidth:0.6,
-        borderBottomColor:"rgba(255,255,10,0.6)"
+        borderBottomColor:"rgba(255,255,255,0.1)"
     },
 
 
