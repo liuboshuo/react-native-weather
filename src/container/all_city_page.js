@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         width:contanst.screen_width,
     },
     content_view_style:{
-      flex:1,
+        flex:1,
         backgroundColor:"#eee"
     },
     flatList:{

@@ -12,12 +12,13 @@ import {
     Image
 } from 'react-native'
 import * as constant from './../common/theme/constant'
-import Swiper from 'react-native-swiper'
 
 const leftW = 60;
 const rightW = 60;
 const tabBarW = constant.screen_width - leftW - rightW;
 const btnW = tabBarW / 3
+
+
 export default class CustomTabBar extends Component
 {
     constructor(props){

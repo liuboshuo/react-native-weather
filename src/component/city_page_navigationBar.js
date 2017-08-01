@@ -54,19 +54,22 @@ export default class City_Page_NavigationBar extends Component{
     }
     cancelSearchAction(){
         const {cancelSearch} = this.props;
-        cancelSearch();
+
         this.input.blur();
         this.input.value = "";
         const views = [this.state.bgImageY,this.state.searchViewAnimatedMarginTop,this.state.bgImageHeight];
+        this.state.text = "";
+        this.setState({
+            startInput:false
+        })
+        cancelSearch();
         Animated.parallel(views.map(data=>{
             return Animated.timing(data,{
                 toValue:1,
                 duration:100
             })
         })).start(()=>{
-            this.setState({
-                startInput:false
-            })
+
         })
     }
 
@@ -102,6 +105,7 @@ export default class City_Page_NavigationBar extends Component{
                             style={styles.textInput}
                             onFocus={this.onFocus.bind(this)}
                             onChangeText={this.onChangeText.bind(this)}
+                            underlineColorAndroid={'transparent'}
                         />
                     </View>
                     {this.state.startInput ?
@@ -143,6 +147,8 @@ const styles = StyleSheet.create({
         fontSize:contanst.subtTitleSize,
         paddingLeft:6,
         paddingRight:3,
+        paddingTop:0,
+        paddingBottom:0
     },
     cancelButtonStyle:{
         justifyContent:'center',

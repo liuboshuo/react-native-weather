@@ -35,7 +35,7 @@ export default class Silde_City_View extends Component {
             };
             const btns = defaultProp ? [deleteBtn] :
                 [{
-                    text:'默认',
+                    text:'置顶',
                     backgroundColor:'rgb(40,50,59)',
                     onPress:()=>{this.setDefault(select_city)}
                 },deleteBtn];

@@ -28,7 +28,7 @@ export default class Common_Middle_Cell extends Component {
 const styles = StyleSheet.create({
     colllectView:{
         width:constant.screen_width / 3,
-        height:30,
+        height:40,
         marginTop:10,
         marginBottom:10,
         marginRight:0,

@@ -12,6 +12,8 @@ import nowweather from './../../api/nowweather.json'
 import detailweather from './../../api/weatherDetail.json'
 import detailweather1 from './../../api/weatherDetailTwo.json'
 import City_Weather_Hour_page from './city_weather_hour_page'
+import Drawer from 'react-native-drawer'
+
 
 export default class Main_Page extends Component {
     constructor(props) {
@@ -31,11 +33,6 @@ export default class Main_Page extends Component {
         this.setState({
             isOpen:false,
         });
-    }
-    onOpen(){
-        this.setState({
-            isOpen:!this.state.isOpen
-        })
     }
     addCityClick(){
         const {navigator} = this.props;
@@ -121,27 +118,62 @@ export default class Main_Page extends Component {
         })
         // console.log(everyHourWeather,nowWeather)
     }
+    closeDrawer = () => {
+        this._drawer.close()
+    };
+    openDrawer = () => {
+        this._drawer.open()
+    };
+    onOpen(){
+        if(this.state.isOpen){
+            this.closeDrawer()
+        }else {
+            this.openDrawer()
+        }
+    }
     render() {
         return (
-            <SlideMenu style={[common_style.container_view]}
-                       isOpen={this.state.isOpen}
-                       menu={<Slide_Page
-                           deleteCity={this.deleteCity.bind(this)}
-                           select_citys={this.state.select_citys}
-                           cellClick={this.cellClick.bind(this)}
-                           addCityClick={this.addCityClick.bind(this)}
-                           setDefaultCity={this.setDefaultCity.bind(this)}
-                       />}
-                       onChange={(isOpen)=>this.onItemChange(isOpen)}
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="static"
+                content={
+                    <Slide_Page
+                    deleteCity={this.deleteCity.bind(this)}
+                    select_citys={this.state.select_citys}
+                    cellClick={this.cellClick.bind(this)}
+                    addCityClick={this.addCityClick.bind(this)}
+                    setDefaultCity={this.setDefaultCity.bind(this)}
+                    closeDrawer={this.closeDrawer}
+                    />
+                }
+                acceptDoubleTap
+                styles={{main: {shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 15}}}
+                onOpen={()=>{
+                    this.setState({
+                        isOpen:true
+                    })}
+                }
+                onClose={()=>{
+                    this.setState({
+                        isOpen:false
+                    })
+                }}
+                captureGestures={false}
+                tweenDuration={100}
+                panThreshold={0.08}
+                disabled={false}
+                openDrawerOffset={(viewport) => {
+                    return 100
+                }}
+                closedDrawerOffset={() => 0}
+                panOpenMask={0.2}
+                negotiatePan
             >
-
-                {/*主页*/}
                 <WeatherForecast onOpen={this.onOpen.bind(this)}
                                  select_citys={this.state.select_citys}
-                                 // onDataLoad={()=>{console.log("onDataLoad")}}
+                    // onDataLoad={()=>{console.log("onDataLoad")}}
                                  pushWeatherToday={this.pushWeatherToday.bind(this)}/>
-
-            </SlideMenu>
+            </Drawer>
         )
     }
 }

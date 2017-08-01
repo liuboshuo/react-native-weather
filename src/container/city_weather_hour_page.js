@@ -7,9 +7,9 @@ import {
     Image,
     Text,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    findNodeHandle
 } from 'react-native'
-
 import common_style from './../common/theme/common_style'
 import Button from './../common/component/button'
 import * as constant from './../common/theme/constant'
@@ -45,7 +45,7 @@ export default class City_Weather_Hour_page extends Component {
         let row = length / exponentialCellViewColumn;
         const color = common_style.separatorWhite.borderBottomColor
         const width = common_style.separatorWhite.borderBottomWidth
-        console.log(length,row);
+        // console.log(length,row);
         if ((model.index+1)  > row * exponentialCellViewColumn - exponentialCellViewColumn  ){
             exponentialCellViewBorder = {borderRightColor:color,borderRightWidth:width}
         }else if ((model.index+1) % exponentialCellViewColumn == 0){
@@ -67,7 +67,7 @@ export default class City_Weather_Hour_page extends Component {
     }
     renderItem(model){
         const {everyHourWeather} = this.props;
-        console.log(getTimeFromDate(everyHourWeather.startTime,model.index));
+        //console.log(getTimeFromDate(everyHourWeather.startTime,model.index));
         return (
             <View style={styles.cellView}>
                 <Text style={styles.text}>{getTimeFromDate(everyHourWeather.startTime,model.index)}</Text>
@@ -169,9 +169,10 @@ export default class City_Weather_Hour_page extends Component {
         }else {
             return (
                 <TouchableOpacity activeOpacity={1} style={styles.detail} onPress={this.hiddenDetailView.bind(this)}>
-                    <Image source={{uri:getImageName(nowWeather.data.bg)}} style={[common_style.container_view,styles.container]}></Image>
+                    <Image ref="backgroundImg" source={{uri:getImageName(nowWeather.data.bg)}} style={[common_style.container_view,styles.container]}></Image>
                     <BlurView
                         style={styles.detail}
+                        viewRef={findNodeHandle(this.refs.backgroundImg)}
                         blurType="dark"
                         blurAmount={10}
                     />
