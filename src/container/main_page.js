@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import WeatherForecast from './weather_forecast'
 import common_style from './../common/theme/common_style'
-import SlideMenu from 'react-native-side-menu'
 import Slide_Page from './slide_page'
 import All_City_Page from './all_city_page'
 import citys from './../../api/all_citys.json'
@@ -21,6 +20,7 @@ export default class Main_Page extends Component {
         this.state = {
             isOpen:false,
             select_citys:[],
+            selectIndex:0,
             updateState:false
         }
     }
@@ -118,6 +118,12 @@ export default class Main_Page extends Component {
         })
         // console.log(everyHourWeather,nowWeather)
     }
+    onClick(index){
+        this.closeDrawer();
+        if (index != this.state.selectIndex){
+            this.setState({selectIndex:index})
+        }
+    }
     closeDrawer = () => {
         this._drawer.close()
     };
@@ -144,6 +150,7 @@ export default class Main_Page extends Component {
                     addCityClick={this.addCityClick.bind(this)}
                     setDefaultCity={this.setDefaultCity.bind(this)}
                     closeDrawer={this.closeDrawer}
+                    onClick={this.onClick.bind(this)}
                     />
                 }
                 acceptDoubleTap
@@ -170,6 +177,7 @@ export default class Main_Page extends Component {
                 negotiatePan
             >
                 <WeatherForecast onOpen={this.onOpen.bind(this)}
+                                 selectIndex={this.state.selectIndex}
                                  select_citys={this.state.select_citys}
                     // onDataLoad={()=>{console.log("onDataLoad")}}
                                  pushWeatherToday={this.pushWeatherToday.bind(this)}/>

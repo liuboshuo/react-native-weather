@@ -51,6 +51,7 @@ export default class City_Page_NavigationBar extends Component{
     }
     onChangeText(text){
         this.props.onChangeText(text)
+        this.state.text = text;
     }
     cancelSearchAction(){
         const {cancelSearch} = this.props;

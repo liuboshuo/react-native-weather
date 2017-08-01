@@ -43,6 +43,7 @@ export default class Slide_Page extends Component{
                     index={index}
                     setDefaultCity={this.props.setDefaultCity}
                     length={select_citys.length}
+                    onClick={()=>this.props.onClick(index)}
                 >
                 </Slide_City_View>
             )

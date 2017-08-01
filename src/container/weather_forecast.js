@@ -28,11 +28,12 @@ export default class WeatherForecast extends Component {
         };
     }
 
-    componentWillMount() {
-
-    }
-    componentDidMount() {
-
+    componentWillReceiveProps(props){
+        const {selectIndex} = props;
+        if(this.state.page != selectIndex){
+            this.setState({page:selectIndex});
+            this.scrollView.scrollResponderScrollTo({x:selectIndex*constant.screen_width,y:0,animated:true})
+        }
     }
 
     leftAction(){

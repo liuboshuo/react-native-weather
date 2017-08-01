@@ -26,7 +26,8 @@ export default class City_Weather_Hour_page extends Component {
         super(props);
         this.state = {
             showDetail:false,
-            showExponential:{}
+            showExponential:{},
+            viewRef:null
         }
     }
     leftAction(){
@@ -79,122 +80,128 @@ export default class City_Weather_Hour_page extends Component {
     }
     render() {
         const {city,nowWeather,everyHourWeather} = this.props;
-        if (!this.state.showDetail){
-            return(
-                <Image source={{uri:getImageName(nowWeather.data.bg)}} style={[common_style.container_view,styles.container]}>
-                    <NavigationBar
-                        title={city.area}
-                        leftImage={{uri:"icon_back"}}
-                        leftAction={this.leftAction.bind(this)}/>
-                    <ScrollView ref={ref=>this.scrollView = ref} style={styles.scrollView}>
+        return(
+            <Image source={{uri:getImageName(nowWeather.data.bg)}} style={[common_style.container_view,styles.container]}>
+                <NavigationBar
+                    title={city.area}
+                    leftImage={{uri:"icon_back"}}
+                    leftAction={this.leftAction.bind(this)}/>
+                <ScrollView ref={ref=>this.scrollView = ref} style={styles.scrollView}>
 
-                        <View style={{marginTop:15}}>
-                            <Now_Weather_View
-                                nowWeather={nowWeather}/>
-                        </View>
-
-                        <View style={common_style.separatorWhite} />
-                        {/* 当前温度, 气压  */}
-                        <View style={styles.middleView}>
-
-                            <Common_Middle_Cell
-                                icon={'current_temp'}
-                                title={'当前温度'}
-                                content={nowWeather.data.tmp + "°C"}
-                            ></Common_Middle_Cell>
-
-
-                            <Common_Middle_Cell
-                                icon={'wind'}
-                                title={nowWeather.data.wd}
-                                content={nowWeather.data.wdg + "级"}
-                            ></Common_Middle_Cell>
-
-
-                            <Common_Middle_Cell
-                                icon={'air_pressure'}
-                                title={"气压"}
-                                content={nowWeather.data.airp  + "hPa"}
-                            ></Common_Middle_Cell>
-
-                        </View>
-
-                        <View style={common_style.separatorWhite}/>
-
-                        <View style={styles.middleView}>
-                            <Common_Middle_Cell
-                                icon={'humidity'}
-                                title={'湿度       '}
-                                content={nowWeather.data.rh + "%"}
-                            ></Common_Middle_Cell>
-
-                            <Common_Middle_Cell
-                                icon={'live_sun'}
-                                title={"日出"+this.props.fiftheenWeather.series[0].sunrise}
-                                content={"日落"+this.props.fiftheenWeather.series[0].sunset}
-                            ></Common_Middle_Cell>
-
-
-                        </View>
-                        <View style={common_style.separatorWhite} />
-
-                        <View style={styles.hor}>
-                            <Text style={styles.title}>未来24小时天气预报</Text>
-                            <View style={common_style.separatorWhite} />
-                            <View style={styles.outer}>
-                                <FlatList style={styles.faltList}
-                                          showsHorizontalScrollIndicator={false}
-                                          data={everyHourWeather.series}
-                                          renderItem={this.renderItem.bind(this)}
-                                          horizontal={true}
-                                />
-                            </View>
-                        </View>
-                        <View style={[styles.hor]}>
-                            <Text style={styles.title}>生活指数</Text>
-                            <View style={common_style.separatorWhite} />
-                            <View style={[styles.outer,{marginBottom:0}]}>
-                                <FlatList style={styles.faltList}
-                                          showsHorizontalScrollIndicator={false}
-                                          data={datas.result.data}
-                                          renderItem={this.renderColumnItem.bind(this)}
-                                          numColumns={exponentialCellViewColumn}
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.scrollViewPadding}/>
-                    </ScrollView>
-                </Image>
-            )
-        }else {
-            return (
-                <TouchableOpacity activeOpacity={1} style={styles.detail} onPress={this.hiddenDetailView.bind(this)}>
-                    <Image ref="backgroundImg" source={{uri:getImageName(nowWeather.data.bg)}} style={[common_style.container_view,styles.container]}></Image>
-                    <BlurView
-                        style={styles.detail}
-                        viewRef={findNodeHandle(this.refs.backgroundImg)}
-                        blurType="dark"
-                        blurAmount={10}
-                    />
-                    <View style={[styles.container,styles.detail,styles.content_view]}>
-
-                        <Text style={styles.detail4}>
-                            {this.state.showExponential.i2}
-                        </Text>
-                        <View style={styles.detailSepator}/>
-                        <Text style={styles.detail5}>
-                            {this.state.showExponential.i5}
-                        </Text>
-                        <Button
-                            style={styles.watchedAction}
-                            text={"确定"}
-                            textStyle={styles.titleStyle}
-                            onPress={this.hiddenDetailView.bind(this)}
-                        />
+                    <View style={{marginTop:15}}>
+                        <Now_Weather_View
+                            nowWeather={nowWeather}/>
                     </View>
-                </TouchableOpacity>
-            )
-        }
+
+                    <View style={common_style.separatorWhite} />
+                    {/* 当前温度, 气压  */}
+                    <View style={styles.middleView}>
+
+                        <Common_Middle_Cell
+                            icon={'current_temp'}
+                            title={'当前温度'}
+                            content={nowWeather.data.tmp + "°C"}
+                        ></Common_Middle_Cell>
+
+
+                        <Common_Middle_Cell
+                            icon={'wind'}
+                            title={nowWeather.data.wd}
+                            content={nowWeather.data.wdg + "级"}
+                        ></Common_Middle_Cell>
+
+
+                        <Common_Middle_Cell
+                            icon={'air_pressure'}
+                            title={"气压"}
+                            content={nowWeather.data.airp  + "hPa"}
+                        ></Common_Middle_Cell>
+
+                    </View>
+
+                    <View style={common_style.separatorWhite}/>
+
+                    <View style={styles.middleView}>
+                        <Common_Middle_Cell
+                            icon={'humidity'}
+                            title={'湿度       '}
+                            content={nowWeather.data.rh + "%"}
+                        ></Common_Middle_Cell>
+
+                        <Common_Middle_Cell
+                            icon={'live_sun'}
+                            title={"日出"+this.props.fiftheenWeather.series[0].sunrise}
+                            content={"日落"+this.props.fiftheenWeather.series[0].sunset}
+                        ></Common_Middle_Cell>
+
+
+                    </View>
+                    <View style={common_style.separatorWhite} />
+
+                    <View style={styles.hor}>
+                        <Text style={styles.title}>未来24小时天气预报</Text>
+                        <View style={common_style.separatorWhite} />
+                        <View style={styles.outer}>
+                            <FlatList style={styles.faltList}
+                                      showsHorizontalScrollIndicator={false}
+                                      data={everyHourWeather.series}
+                                      renderItem={this.renderItem.bind(this)}
+                                      horizontal={true}
+                            />
+                        </View>
+                    </View>
+                    <View style={[styles.hor]}>
+                        <Text style={styles.title}>生活指数</Text>
+                        <View style={common_style.separatorWhite} />
+                        <View style={[styles.outer,{marginBottom:0}]}>
+                            <FlatList style={styles.faltList}
+                                      showsHorizontalScrollIndicator={false}
+                                      data={datas.result.data}
+                                      renderItem={this.renderColumnItem.bind(this)}
+                                      numColumns={exponentialCellViewColumn}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.scrollViewPadding}/>
+                </ScrollView>
+
+                {this.state.showDetail ?
+                    <TouchableOpacity activeOpacity={1} style={styles.detail} onPress={this.hiddenDetailView.bind(this)}>
+                        <Image ref="backgroundImg" onLoadEnd={()=>{
+                            this.setState({viewRef:findNodeHandle(this.refs.backgroundImg)})
+                        }} source={{uri:getImageName(nowWeather.data.bg)}} style={styles.detail}/>
+                        {
+                            this.state.viewRef && <BlurView
+                                style={styles.detail}
+                                viewRef={this.state.viewRef}
+                                blurType="dark"
+                                blurRadius={9}
+                                blurAmount={12}
+                            />
+                        }
+                        <View style={[styles.container,styles.detail,styles.content_view]}>
+
+                            <Text style={styles.detail4}>
+                                {this.state.showExponential.i2}
+                            </Text>
+                            <View style={styles.detailSepator}/>
+                            <Text style={styles.detail5}>
+                                {this.state.showExponential.i5}
+                            </Text>
+                            <Button
+                                style={styles.watchedAction}
+                                text={"确定"}
+                                textStyle={styles.titleStyle}
+                                onPress={this.hiddenDetailView.bind(this)}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    :
+                    null
+                }
+
+            </Image>
+        )
     }
 }
 

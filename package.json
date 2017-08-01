@@ -12,7 +12,6 @@
     "react-native-blur": "^3.1.2",
     "react-native-deprecated-custom-components": "^0.1.0",
     "react-native-drawer": "^2.3.0",
-    "react-native-side-menu": "^0.20.3",
     "react-native-swipeout": "^2.0.13"
   },
   "devDependencies": {

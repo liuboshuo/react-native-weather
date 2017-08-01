@@ -6,7 +6,8 @@ import {
     View,
     Text,
     StyleSheet,
-    Image
+    TouchableOpacity,
+    Image,
 } from 'react-native'
 import * as contanst from './../common/theme/constant'
 import common_style from './../common/theme/common_style'
@@ -24,6 +25,12 @@ export default class Silde_City_View extends Component {
         const {setDefaultCity,index} = this.props;
         setDefaultCity(index);
     }
+    onClick()
+    {
+        console.log("click")
+        this.props.onClick()
+    }
+
     render() {
         const {select_city,key,defaultProp,length} = this.props;
         const {city,nowWeather} = select_city;
@@ -41,31 +48,30 @@ export default class Silde_City_View extends Component {
                 },deleteBtn];
 
             return(
+                    <Swipeout key={key}
+                              autoClose={true}
+                              style={styles.swipeoutView}
+                              right={btns}  >
+                        <TouchableOpacity activeOpacity={1} onPress={()=>this.onClick()} style={styles.cellView} >
+                            <Text style={styles.areaStyle}>{city.area}</Text>
 
-                <Swipeout key={key}
-                          autoClose={true}
-                          style={styles.swipeoutView}
-                          right={btns}  >
-                    <View style={styles.cellView} >
-                        <Text style={styles.areaStyle}>{city.area}</Text>
-
-                        <View style={styles.rightView}>
-                            <Image style={styles.temIcon} source={{"uri":nowWeather.data.icon}}/>
-                            <Text style={styles.tempStyle}>{nowWeather.data.tmp_max} {"°C~"} {nowWeather.data.tmp_min +"°C"} </Text>
-                        </View>
-                    </View>
-                </Swipeout>
+                            <View style={styles.rightView}>
+                                <Image style={styles.temIcon} source={{"uri":nowWeather.data.icon}}/>
+                                <Text style={styles.tempStyle}>{nowWeather.data.tmp_max} {"°C~"} {nowWeather.data.tmp_min +"°C"} </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </Swipeout>
             )
         }else {
             return(
-                <View style={styles.cellView} >
+                <TouchableOpacity activeOpacity={1} style={styles.cellView} onPress={()=>this.onClick()}>
                     <Text style={styles.areaStyle}>{city.area}</Text>
 
                     <View style={styles.rightView}>
                         <Image style={styles.temIcon} source={{"uri":nowWeather.data.icon}}/>
                         <Text style={styles.tempStyle}>{nowWeather.data.tmp_max} {"°C~"} {nowWeather.data.tmp_min +"°C"} </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             )
         }
 
