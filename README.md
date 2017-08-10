@@ -52,7 +52,7 @@
 
 ## 项目截图
 
-https://github.com/liuboshuo/react-native-food
+![](https://github.com/liuboshuo/react-native-weather/blob/master/image/rn_weather.gif)
 
 
 ## 使用框架
