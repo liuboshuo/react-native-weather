@@ -818,6 +818,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ls.rn-weathers";
 				PRODUCT_NAME = rn_weather;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -844,6 +845,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ls.rn-weathers";
 				PRODUCT_NAME = rn_weather;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
