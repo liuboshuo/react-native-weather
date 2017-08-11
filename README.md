@@ -31,7 +31,7 @@
 
 
 个人学习中做的小Demo,有兴趣可以共同学习一下
-[react-learn](https://github.com/liuboshuo/react-learn)不断更新...
+[react-native-learn](https://github.com/liuboshuo/react-native)不断更新...
 
 
 ## 项目简介
